@@ -58,21 +58,55 @@ if (defined $args{l}) {
 }
 
 
-open INFILE, "<$args{f}";
-open OUTFILE, ">$args{f}.mod";
-while(<INFILE>) {
-    if(/zone "$args{d}"/) {
-            print "Removing $args{d}\n";
+# Handle domain input from file
+if (defined $args{l}) {
+    my $filename = "<$args{l}>";
+    print $filename;
+    open(my $fh, '<:encoding(UTF-8)', $filename)
+        or die "Could not open file '$filename' $!";
+
+    while (my $domain = <$fh>) {
+        chomp $domain;
+        open INFILE, "<$args{f}";
+        open OUTFILE, ">$args{f}.mod";
         while(<INFILE>) {
-            if(/^};/) {
-                print "Done with zone removal\n";
-                last;
+            if(/zone "$args{d}"/) {
+                    print "Removing $args{d}\n";
+                while(<INFILE>) {
+                    if(/^};/) {
+                        print "Done with zone removal\n";
+                        last;
+                    }
+                }
+            } else {
+                print OUTFILE;
             }
         }
-    } else {
-        print OUTFILE;
+        close INFILE;
+        close OUTFILE;
+        rename("$args{f}.mod", "$args{f}");
     }
+    print "All done!\n";
 }
-close INFILE;
-close OUTFILE;
-rename("$args{f}.mod", "$args{f}");
+# Handle domain input from stdin
+elsif (defined $args{d}) {
+    open INFILE, "<$args{f}";
+    open OUTFILE, ">$args{f}.mod";
+    while(<INFILE>) {
+        if(/zone "$args{d}"/) {
+                print "Removing $args{d}\n";
+            while(<INFILE>) {
+                if(/^};/) {
+                    print "Done with zone removal\n";
+                    last;
+                }
+            }
+        } else {
+            print OUTFILE;
+        }
+    }
+    close INFILE;
+    close OUTFILE;
+    rename("$args{f}.mod", "$args{f}");
+    print "All done!\n";
+}

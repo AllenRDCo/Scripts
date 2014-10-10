@@ -70,11 +70,11 @@ if (defined $args{l}) {
         open INFILE, "<$args{f}";
         open OUTFILE, ">$args{f}.mod";
         while(<INFILE>) {
-            if(/zone "$domain"/) {
+            if(/^zone "$domain"/) {
                     print "Removing $domain\n";
                 while(<INFILE>) {
                     if(/^};/) {
-                        print "Done with zone removal\n";
+                        print "$domain removed.\n";
                         last;
                     }
                 }
@@ -86,7 +86,7 @@ if (defined $args{l}) {
         close OUTFILE;
         rename("$args{f}.mod", "$args{f}");
     }
-    print "All done!\n";
+    print "Done removing zones!\n";
 }
 # Handle domain input from stdin
 elsif (defined $args{d}) {
@@ -97,7 +97,7 @@ elsif (defined $args{d}) {
                 print "Removing $args{d}\n";
             while(<INFILE>) {
                 if(/^};/) {
-                    print "Done with zone removal\n";
+                    print "$args{d} removed.\n";
                     last;
                 }
             }
@@ -108,5 +108,20 @@ elsif (defined $args{d}) {
     close INFILE;
     close OUTFILE;
     rename("$args{f}.mod", "$args{f}");
-    print "All done!\n";
+    print "Done removing zones!\n";
 }
+
+# Clean up extra newlines
+    open INFILE, "<$args{f}";
+    open OUTFILE, ">$args{f}.mod";
+    while(<INFILE>) {
+        if() { # need to read file in chunks without using \n as seperator, then strip out 2+ newlines to leave just one newline
+        } else {
+            print OUTFILE;
+        }
+    }
+    close INFILE;
+    close OUTFILE;
+    rename("$args{f}.mod", "$args{f}");
+    print "All done!\n";
+

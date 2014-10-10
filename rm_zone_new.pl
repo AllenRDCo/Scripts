@@ -60,7 +60,7 @@ if (defined $args{l}) {
 
 # Handle domain input from file
 if (defined $args{l}) {
-    my $filename = "<$args{l}>";
+    my $filename = "$args{l}";
     print $filename;
     open(my $fh, '<:encoding(UTF-8)', $filename)
         or die "Could not open file '$filename' $!";
@@ -70,8 +70,8 @@ if (defined $args{l}) {
         open INFILE, "<$args{f}";
         open OUTFILE, ">$args{f}.mod";
         while(<INFILE>) {
-            if(/zone "$args{d}"/) {
-                    print "Removing $args{d}\n";
+            if(/zone "$domain"/) {
+                    print "Removing $domain\n";
                 while(<INFILE>) {
                     if(/^};/) {
                         print "Done with zone removal\n";

@@ -112,14 +112,22 @@ elsif (defined $args{d}) {
 }
 
 # Clean up extra newlines
-    open INFILE, "<$args{f}";
-    open OUTFILE, ">$args{f}.mod";
-    while(<INFILE>) {
-        local &/ = undef;
-        s/\n+/\n/;
-    }
-    close INFILE;
-    close OUTFILE;
-    rename("$args{f}.mod", "$args{f}");
-    print "All done!\n";
+#    open INFILE, "<$args{f}";
+#    open OUTFILE, ">$args{f}.mod";
+#    while(<INFILE>) {
+#        local &/ = undef;
+#        s/\n+/\n/;
+#    }
+#    close INFILE;
+#    close OUTFILE;
+#    rename("$args{f}.mod", "$args{f}");
+#    print "All done!\n";
 
+my $text = do { local( @ARGV, $/ = undef ) = $args{f}; <> };
+
+$text =~ s/\n+/\n/g;
+
+open my $FH, ">", "$args{f}.mod";
+print $FH $text;
+close $FH;
+rename("$args{f}.mod", "$args{f}");

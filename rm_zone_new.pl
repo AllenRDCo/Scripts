@@ -115,10 +115,8 @@ elsif (defined $args{d}) {
     open INFILE, "<$args{f}";
     open OUTFILE, ">$args{f}.mod";
     while(<INFILE>) {
-        if() { # need to read file in chunks without using \n as seperator, then strip out 2+ newlines to leave just one newline
-        } else {
-            print OUTFILE;
-        }
+        local &/ = undef;
+        s/\n+/\n/;
     }
     close INFILE;
     close OUTFILE;
